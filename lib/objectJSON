@@ -52,6 +52,6 @@ function encodeAndSavePretty(filename, obj)
 		error("File " .. filename .. " does not exist.")
 	end
 	local h = fs.open(filename, "w")
-	h.write(encodePretty(obj))
+	h.write(json.encodePretty(obj))
 	h.close()
 end
