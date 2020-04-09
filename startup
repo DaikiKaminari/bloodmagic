@@ -18,8 +18,6 @@ local function init()
     if not fs.exists("lib/json") then
         shell.run("pastebin get 4nRg9CHU lib/json")
     end
-    os.loadAPI("lib/json")
-    print("lib/json loaded")
 end
 
 local function loadAPI(apis)
