@@ -1,10 +1,9 @@
 -- [V0.1]
 
 --- INIT ---
-if not fs.exists("lib/objectJSON") then
-    shell.run("pastebin get zqV8ihh0 lib/objectJSON")
+function init()
+    os.loadAPI("lib/objectJSON")
 end
-os.loadAPI("lib/objectJSON")
 
 --- FUNCTIONS ---
 local function alreadyPresent(recipes, itemID)

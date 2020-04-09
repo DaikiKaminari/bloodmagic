@@ -65,8 +65,18 @@ local function manageRecipes()
     while true do
         if hasRedstoneSignal() then
             recipesManager.addItem(config.jsonRecipes, config.inputRecipeChest, config.outputRecipeChest)
+            sleep(1)
         end
         sleep(1)
+    end
+end
+
+local function gestionAltar()
+    local wantedID = wantedOutputID(wantedChest)
+    while true do
+        newItemToProcess(altar, wantedChest, inputChest, wantedID)
+        item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
+        wantedID = wantedOutputID(wantedChest)
     end
 end
 
@@ -74,6 +84,7 @@ end
 local function main()
     -- Loading APIs
     loadAPI({"recipesManager", "lib/item", "lib/objectJSON"})
+    recipesManager.init()
     objectJSON.init()
 
     -- Loading config
@@ -84,12 +95,10 @@ local function main()
     local outputChest = getPeripheral(config.outputChest)
 
     -- Begin
-    local wantedID = wantedOutputID(wantedChest)
     while true do
-        newItemToProcess(altar, wantedChest, inputChest, wantedID)
-        item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-        wantedID = wantedOutputID(wantedChest)
+        parallel.waitForAll(gestionAltar, manageRecipes)
     end
+    
 end
 
 main()
