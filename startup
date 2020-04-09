@@ -104,6 +104,7 @@ local function manageAltar()
             item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
             wantedID = wantedOutputID(wantedChest)
         end
+        sleep(0)
     end
 end
 
@@ -138,6 +139,7 @@ local function main()
     -- Begin
     while true do
         parallel.waitForAll(manageAltar, manageRecipes)
+        sleep(0)
     end
     
 end
