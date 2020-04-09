@@ -1,5 +1,8 @@
 -- Returns true if a slot of a container contains item(s), itemID may be specified
 function slotContainsItem(container, slot, itemID)
+    if container == nil then
+        error("Container is nil.")
+    end
     local slotInfo = container.getStackInSlot(slot)
     if (slotInfo == nil) or (itemID ~= nil and slotInfo.id ~= itemID) then
         return false

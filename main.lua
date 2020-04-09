@@ -4,6 +4,13 @@ if not fs.exists("lib/json") then
 end
 os.loadAPI("lib/json")
 
+--- GLOBAL VARIABLES ---
+local config = objectJSON.decodeFromFile("config")
+local altar = getPeripheral(config.altar)
+local wantedChest = getPeripheral(config.wantedChest)
+local inputChest = getPeripheral(config.inputChest)
+local outputChest = getPeripheral(config.outputChest)
+
 
 --- FUNCTIONS ---
 local function loadAPI(apis)
@@ -33,7 +40,7 @@ local function wantedOutputID(container)
     return slotInfo.id
 end
 
-local function newItemToProcess(altar, wantedChest, inputChest, wantedID)
+local function newItemToProcess(wantedID)
     while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
         if item.containsItem(altar) then -- if the altar contains items
             if item.slotContainsItem(altar, 1, wantedID) then -- altar contains wanted item
@@ -74,7 +81,7 @@ end
 local function gestionAltar()
     local wantedID = wantedOutputID(wantedChest)
     while true do
-        newItemToProcess(altar, wantedChest, inputChest, wantedID)
+        newItemToProcess(wantedID)
         item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
         wantedID = wantedOutputID(wantedChest)
     end
@@ -89,10 +96,10 @@ local function main()
 
     -- Loading config
     config = objectJSON.decodeFromFile("config")
-    local altar = getPeripheral(config.altar)
-    local wantedChest = getPeripheral(config.wantedChest)
-    local inputChest = getPeripheral(config.inputChest)
-    local outputChest = getPeripheral(config.outputChest)
+    altar = getPeripheral(config.altar)
+    wantedChest = getPeripheral(config.wantedChest)
+    inputChest = getPeripheral(config.inputChest)
+    outputChest = getPeripheral(config.outputChest)
 
     -- Begin
     while true do
