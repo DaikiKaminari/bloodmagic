@@ -1,7 +1,9 @@
 -- [V1.3]
 --- INIT ---
 function init()
+	print("\n--- INIT objectJSON ---")
 	os.loadAPI("json")
+	print("json loaded")
 end
 
 --- FUNCTIONS ---

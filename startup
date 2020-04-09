@@ -1,9 +1,3 @@
---- INIT ---
-if not fs.exists("lib/json") then
-    shell.run("pastebin get 4nRg9CHU lib/json")
-end
-os.loadAPI("lib/json")
-
 --- GLOBAL VARIABLES ---
 local config        -- table : configuration
 local altar         -- table : altar (peripheral)
@@ -11,8 +5,20 @@ local wantedChest   -- table : container containing the "wanted output item" (pe
 local inputChest    -- table : container contaning input items (peripheral)
 local outputChest   -- table : container containing output items (periphral)
 
+--- INIT ---
+local function init()
+    local mon = peripheral.find("monitor")
+    if mon ~= nil then
+        term.redirect(mon)
+    end
+    print("\n--- INIT startup ---")
+    if not fs.exists("lib/json") then
+        shell.run("pastebin get 4nRg9CHU lib/json")
+    end
+    os.loadAPI("lib/json")
+    print("lib/json loaded")
+end
 
---- FUNCTIONS ---
 local function loadAPI(apis)
     for _,v in pairs(apis) do
         print("Loading API : " .. v)
@@ -22,6 +28,7 @@ local function loadAPI(apis)
     print("")
 end
 
+--- CONFIG ---
 local function getPeripheral(side)
     local p = peripheral.wrap(side)
     if p == nil then
@@ -30,6 +37,18 @@ local function getPeripheral(side)
     return p
 end
 
+--- UTILS ---
+
+local function hasRedstoneSignal()
+    for _,v in pairs(redstone.getSides()) do
+        if redstone.getInput(v) then
+            return true
+        end
+    end
+    return false
+end
+
+--- FUNCTIONS ---
 local function wantedOutputID(container)
     print("\nSearching for a wanted item ...")
     while not item.slotContainsItem(container, 1) do
@@ -59,15 +78,6 @@ local function newItemToProcess(wantedID)
     print("Removed item")
 end
 
-local function hasRedstoneSignal()
-    for _,v in pairs(redstone.getSides()) do
-        if redstone.getInput(v) then
-            return true
-        end
-    end
-    return false
-end
-
 local function manageRecipes()
     while true do
         if hasRedstoneSignal() then
@@ -89,7 +99,8 @@ end
 
 --- MAIN ---
 local function main()
-    -- Loading APIs
+    -- Init
+    init()
     loadAPI({"recipesManager", "lib/item", "lib/objectJSON"})
     recipesManager.init()
     objectJSON.init()

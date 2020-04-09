@@ -2,7 +2,11 @@
 
 --- INIT ---
 function init()
+    print("\n--- INIT recipesManager ---")
     os.loadAPI("lib/objectJSON")
+    print("lib/objectJSON loaded")
+    os.loadAPI("lib/item")
+    print("lib/item loaded")
 end
 
 --- FUNCTIONS ---
