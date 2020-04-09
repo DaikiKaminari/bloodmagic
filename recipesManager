@@ -21,7 +21,11 @@ end
 
 --- CALL ---
 function addItem(jsonFile, inputChest, outputChest)
+    print("TEST")
+    print(jsonFile)
     local recipes = objectJSON.decodeFromFile(jsonFile)
+    print(recipes)
+    print("FIN TEST")
     local inputItemID = item.getItemIDFromSlot(inputChest, 2)
     local outputItemID = item.getItemIDFromSlot(outputChest, 2)
 
