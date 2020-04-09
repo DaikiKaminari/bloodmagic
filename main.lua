@@ -5,11 +5,11 @@ end
 os.loadAPI("lib/json")
 
 --- GLOBAL VARIABLES ---
-local config = objectJSON.decodeFromFile("config")
-local altar = getPeripheral(config.altar)
-local wantedChest = getPeripheral(config.wantedChest)
-local inputChest = getPeripheral(config.inputChest)
-local outputChest = getPeripheral(config.outputChest)
+local config        -- table : configuration
+local altar         -- table : altar (peripheral)
+local wantedChest   -- table : container containing the "wanted output item" (peripheral)
+local inputChest    -- table : container contaning input items (peripheral)
+local outputChest   -- table : container containing output items (periphral)
 
 
 --- FUNCTIONS ---
