@@ -1,7 +1,7 @@
 -- Returns true if a slot of a container contains item(s), itemID may be specified
 function slotContainsItem(container, slot, itemID)
     if container == nil then
-        error("Container is nil.")
+        error("Container cannot be nil.")
     end
     local slotInfo = container.getStackInSlot(slot)
     if (slotInfo == nil) or (itemID ~= nil and slotInfo.id ~= itemID) then
@@ -38,9 +38,12 @@ end
 
 -- Returns item ID from a slot in a container
 function getItemIDFromSlot(container, slot)
+    if container == nil then
+        error("Container cannot be nil.")
+    end
     local item = container.getStackInSlot(slot)
     if item == nil then
-        error("Container is not recognized or slot " .. tostring(slot) .. " is empty")
+        error("Slot " .. tostring(slot) .. " is empty")
     end
     return item.id
 end
