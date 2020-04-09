@@ -1,9 +1,12 @@
+-- [V0.1]
 --- GLOBAL VARIABLES ---
-local config        -- table : configuration
-local altar         -- table : altar (peripheral)
-local wantedChest   -- table : container containing the "wanted output item" (peripheral)
-local inputChest    -- table : container contaning input items (peripheral)
-local outputChest   -- table : container containing output items (periphral)
+local config            -- table : configuration
+local altar             -- table : altar (peripheral)
+local wantedChest       -- table : container containing the "wanted output item" (peripheral)
+local inputChest        -- table : container contaning input items (peripheral)
+local outputChest       -- table : container containing output items (periphral)
+local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
+local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
 
 --- INIT ---
 local function init()
@@ -81,7 +84,7 @@ end
 local function manageRecipes()
     while true do
         if hasRedstoneSignal() then
-            recipesManager.addItem(config.jsonRecipes, config.inputRecipeChest, config.outputRecipeChest)
+            recipesManager.addItem(config.jsonRecipes, inputRecipeChest, outputRecipeChest)
             sleep(1)
         end
         sleep(1)
@@ -111,6 +114,8 @@ local function main()
     wantedChest = getPeripheral(config.wantedChest)
     inputChest = getPeripheral(config.inputChest)
     outputChest = getPeripheral(config.outputChest)
+    inputRecipeChest = getPeripheral(config.inputRecipeChest)
+    outputRecipeChest = getPeripheral(config.outputRecipeChest)
 
     -- Begin
     while true do
