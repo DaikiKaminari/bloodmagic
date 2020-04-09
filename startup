@@ -60,6 +60,7 @@ local function wantedOutputID(container)
     return slotInfo.id
 end
 
+-- manage input and output of a specified item
 local function newItemToProcess(wantedID)
     while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
         if item.containsItem(altar) then -- if the altar contains items
@@ -79,6 +80,33 @@ local function newItemToProcess(wantedID)
     print("Removed item")
 end
 
+-- returns the ID of the item needed in input to get the wantedID in output
+local function neededID(jsonFile, wantedID)
+    local recipes = objectJSON.decodeFromFile(jsonFile)
+    local neededID = recipes[wantedID]
+    if neededID == nil then
+        print("Needed ID for " .. wantedID .. " not found.")
+    return neededID
+end
+
+-- manage the altar
+local function manageAltar()
+    local wantedID = wantedOutputID(wantedChest)
+    while true do
+        local neededID = neededID(config.jsonRecipes, wantedID)
+        if neededID == nil then -- if no ID found for specified craft
+            while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
+                sleep(1)
+            end
+        else
+            newItemToProcess(wantedID)
+            item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
+            wantedID = wantedOutputID(wantedChest)
+        end
+    end
+end
+
+-- manage adding and editing recipes
 local function manageRecipes()
     while true do
         if hasRedstoneSignal() then
@@ -86,15 +114,6 @@ local function manageRecipes()
             sleep(1)
         end
         sleep(1)
-    end
-end
-
-local function gestionAltar()
-    local wantedID = wantedOutputID(wantedChest)
-    while true do
-        newItemToProcess(wantedID)
-        item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-        wantedID = wantedOutputID(wantedChest)
     end
 end
 
@@ -117,7 +136,7 @@ local function main()
 
     -- Begin
     while true do
-        parallel.waitForAll(gestionAltar, manageRecipes)
+        parallel.waitForAll(manageAltar, manageRecipes)
     end
     
 end
