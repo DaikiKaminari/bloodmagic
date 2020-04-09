@@ -74,6 +74,7 @@ end
 local function main()
     -- Loading APIs
     loadAPI({"recipesManager", "lib/items", "lib/objectJSON"})
+    objectJSON.init()
 
     -- Loading config
     config = objectJSON.decodeFromFile("config")
