@@ -38,9 +38,6 @@ function addItem(jsonFile, inputChest, outputChest)
         print("New item added to recipe list.\n")
     end
 
-    if recipes == nil then
-        error("recipes cannot be nil.")
-    end
     if receipes == {} then
         error("recipes cannot be empty.")
     end

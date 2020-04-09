@@ -85,7 +85,7 @@ local function neededID(jsonFile, wantedID)
     local recipes = objectJSON.decodeFromFile(jsonFile)
     local neededID = recipes[wantedID]
     if neededID == nil then
-        print("Needed ID for " .. wantedID .. " not found.")
+        print("\nNeeded ID for " .. wantedID .. " not found.")
     end
     return neededID
 end
@@ -112,6 +112,10 @@ end
 local function manageRecipes()
     while true do
         if hasRedstoneSignal() then
+            if (not item.containsItem(inputRecipeChest)) or (not item.containsItem(outputRecipeChest)) then
+                print("\nItem not found in input or output recipe chest.")
+                print("Recipe not added.")
+            end
             recipesManager.addItem(config.jsonRecipes, inputRecipeChest, outputRecipeChest)
             sleep(1)
         end
