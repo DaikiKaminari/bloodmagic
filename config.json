@@ -4,6 +4,6 @@
     "wantedChest": "top",
     "altar": "back",
     "jsonRecipes": "recipes",
-    "inputRecipeChest": "",
-    "outputRecipeChest": ""
+    "inputRecipeChest": "tile_thermalexpansion_cache_basic_name_0",
+    "outputRecipeChest": "tile_thermalexpansion_cache_basic_name_1"
 }
