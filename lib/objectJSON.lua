@@ -2,7 +2,7 @@
 
 --- INIT ---
 if not fs.exists("json") then
-	shell.run("pastebin get 4nRg9CHU json")
+	shell.run("pastebin get 4nRg9CHU lib/json")
 end
 os.loadAPI("json")
 
