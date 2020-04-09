@@ -25,7 +25,7 @@ end
 
 local function wantedOutputID(container)
     print("\nSearching for a wanted item ...")
-    while not items.slotContainsItem(container, 1) do
+    while not item.slotContainsItem(container, 1) do
         sleep(1)
     end
     local slotInfo = container.getStackInSlot(1)
@@ -34,17 +34,17 @@ local function wantedOutputID(container)
 end
 
 local function newItemToProcess(altar, wantedChest, inputChest, wantedID)
-    while items.slotContainsItem(wantedChest, 1) or not items.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
-        if items.containsItem(altar) then -- if the altar contains items
-            if items.slotContainsItem(altar, 1, wantedID) then -- altar contains wanted item
-                items.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-                if items.containsItem(inputChest) then -- if the input chest contains items
-                    items.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
+    while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
+        if item.containsItem(altar) then -- if the altar contains items
+            if item.slotContainsItem(altar, 1, wantedID) then -- altar contains wanted item
+                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
+                if item.containsItem(inputChest) then -- if the input chest contains items
+                    item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
                 end
             end
         else -- if the altar is empty
-            if items.containsItem(inputChest) then -- if the input chest contains items
-                items.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
+            if item.containsItem(inputChest) then -- if the input chest contains items
+                item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
             end
         end
         sleep(1)
@@ -73,7 +73,7 @@ end
 --- MAIN ---
 local function main()
     -- Loading APIs
-    loadAPI({"recipesManager", "lib/items", "lib/objectJSON"})
+    loadAPI({"recipesManager", "lib/item", "lib/objectJSON"})
     objectJSON.init()
 
     -- Loading config
@@ -87,7 +87,7 @@ local function main()
     local wantedID = wantedOutputID(wantedChest)
     while true do
         newItemToProcess(altar, wantedChest, inputChest, wantedID)
-        items.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
+        item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
         wantedID = wantedOutputID(wantedChest)
     end
 end

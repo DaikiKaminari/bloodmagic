@@ -1,9 +1,6 @@
 -- [V1.3]
 --- INIT ---
 function init()
-	if not fs.exists("json") then
-		shell.run("pastebin get 4nRg9CHU json")
-	end
 	os.loadAPI("json")
 end
 
