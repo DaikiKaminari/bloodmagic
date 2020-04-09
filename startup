@@ -86,6 +86,7 @@ local function neededID(jsonFile, wantedID)
     local neededID = recipes[wantedID]
     if neededID == nil then
         print("Needed ID for " .. wantedID .. " not found.")
+    end
     return neededID
 end
 
