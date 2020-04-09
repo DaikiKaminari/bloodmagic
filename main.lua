@@ -1,3 +1,12 @@
+--- INIT ---
+
+if not fs.exists("json") then
+	shell.run("pastebin get 4nRg9CHU json")
+end
+os.loadAPI("json")
+
+
+--- FUNCTIONS ---
 local function loadAPI(apis)
     for _,v in pairs(apis) do
         print("Loading API : " .. v)
@@ -62,6 +71,7 @@ local function manageRecipes()
     end
 end
 
+--- MAIN ---
 local function main()
     -- Loading APIs
     loadAPI({"recipesManager", "lib/items", "lib/objectJSON"})
