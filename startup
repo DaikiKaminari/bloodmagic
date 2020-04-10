@@ -1,4 +1,4 @@
-local version = 0.5
+local version = 0.51
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -140,11 +140,13 @@ local function manageAltar()
         end
         if item.containsItem(altar) then -- turn on the altar if it contains items
             altarEmpty = 0
+            print("\nStarting blood production.")
             switchAltar("on")
         else
             altarEmpty = altarEmpty + 1
         end
         if altarEmpty >= 30 then -- turn off the altar if it does not contain items for more than 30secs
+            print("\nStopping blood production.")
             switchAltar("off")
         end
         sleep(1)
