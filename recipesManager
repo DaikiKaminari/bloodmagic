@@ -20,6 +20,12 @@ local function outputAlreadyPresent(recipes, itemID)
     return false
 end
 
+-- returns the input item corresponding to an output item
+local function getInputItem(jsonFile, itemID)
+    local recipes = objectJSON.decodeFromFile(jsonFile)
+    return recipes[itemID]
+end
+
 -- returns output item corresponding to an input item
 local function getOutputItem(jsonFile, itemID)
     local recipes = objectJSON.decodeFromFile(jsonFile)
