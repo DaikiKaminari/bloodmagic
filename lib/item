@@ -1,3 +1,4 @@
+-- [V0.1]
 -- Returns true if a slot of a container contains item(s), itemID may be specified
 function slotContainsItem(container, slot, itemID)
     if container == nil then
