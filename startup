@@ -83,28 +83,26 @@ end
 -- returns the ID of the item needed in input to get the wantedID in output
 local function neededID(jsonFile, wantedID)
     local recipes = objectJSON.decodeFromFile(jsonFile)
-    local neededID = recipes[wantedID]
-    if neededID == nil then
-        print("\nNeeded ID for " .. wantedID .. " not found.")
-    end
-    return neededID
+    return recipes[wantedID]
 end
 
 -- manage the altar
 local function manageAltar()
-    local wantedID = wantedOutputID(wantedChest)
+    local wantedID
+    local neededID
     while true do
-        local neededID = neededID(config.jsonRecipes, wantedID)
+        wantedID = wantedOutputID(wantedChest)
+        neededID = neededID(config.jsonRecipes, wantedID)
         if neededID == nil then -- if no ID found for specified craft
+            print("\nNeeded ID for " .. wantedID .. " not found.")
             while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
                 sleep(1)
             end
         else
             newItemToProcess(wantedID)
-            item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-            wantedID = wantedOutputID(wantedChest)
+            item.pushItem(altar, "SOUTH") -- send all items from the altar into the output chest
         end
-        sleep(0)
+        sleep(1)
     end
 end
 
@@ -115,9 +113,10 @@ local function manageRecipes()
             if (not item.containsItem(inputRecipeChest)) or (not item.containsItem(outputRecipeChest)) then
                 print("\nItem not found in input or output recipe chest.")
                 print("Recipe not added.")
+            else
+                recipesManager.addItem(config.jsonRecipes, inputRecipeChest, outputRecipeChest)
+                sleep(1)
             end
-            recipesManager.addItem(config.jsonRecipes, inputRecipeChest, outputRecipeChest)
-            sleep(1)
         end
         sleep(1)
     end
