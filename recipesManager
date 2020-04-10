@@ -44,7 +44,7 @@ function addItem(jsonFile, inputChest, outputChest)
     local outputItemID = item.getItemIDFromSlot(outputChest, 2)
 
     if outputAlreadyPresent(recipes, outputItemID) then
-        print("Item is already present.")
+        print("\nItem is already present.")
         print("Do you want to change the recipe ? Answer with Y or N")
         local str = io.read()
         if str == "Y" or str == "y" then
@@ -53,7 +53,7 @@ function addItem(jsonFile, inputChest, outputChest)
         print("Recipe changed.\n")
     else
         recipes[outputItemID] = inputItemID
-        print("New item added to recipe list.\n")
+        print("\nNew item added to recipe list.")
     end
 
     if receipes == {} then

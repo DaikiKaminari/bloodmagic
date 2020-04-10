@@ -13,6 +13,9 @@ end
 
 -- Returns true if a container contains item(s), itemID may be specified
 function containsItem(container, itemID)
+    if container == nil then
+        error("container cannot be nil.")
+    end
     local n = container.getInventorySize()
     local i = 1
     while i <= n do
