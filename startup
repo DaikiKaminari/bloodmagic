@@ -7,6 +7,7 @@ local inputChest        -- table : container contaning input items (peripheral)
 local outputChest       -- table : container containing output items (periphral)
 local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
 local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
+local autoCraftChest    -- table : container containing input items for an autocraft (peripheral)
 
 --- INIT ---
 local function init()
@@ -76,29 +77,35 @@ local function newItemToProcess(wantedItemID, neededItemID)
 end
 
 -- returns wanted item ID
-local function wantedOutputID(container)
+local function wantedOutputID()
     print("\nSearching for a wanted item ...")
-    while not item.slotContainsItem(container, 1) do
+    local wantedItemID = nil
+    while wantedItemID == nil do
+        if item.slotContainsItem(wantedChest, 1) then -- if there is something in the wanted chest
+            print("Manual crafting detected.")
+            wantedItemID = wantedChest.getStackInSlot(1).id
+        else -- if there is nothing in the wanted chest
+            if item.containsItem(autoCraftChest) then -- if the autocraft chest contains any item
+                print("Auto crafting detected.")
+                local slot = item.getSlotOfItem(autoCraftChest) -- get the slot of the 1st item
+                local inputItemID = autoCraftChest.getStackInSlot(slot).id -- get the input item in autocraft chest
+                wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, inputItemID) -- get corresponding output item according to the recipe
+            end
+        end
         sleep(1)
     end
-    local slotInfo = container.getStackInSlot(1)
-    print("Item found ! It is : " .. slotInfo.display_name)
-    return slotInfo.id
+    print("Item found ! It is : " .. wantedItemID)
+    return wantedItemID
 end
 
--- returns the ID of the item needed in input to get the wantedID in output
-local function neededID(jsonFile, wantedID)
-    local recipes = objectJSON.decodeFromFile(jsonFile)
-    return recipes[wantedID]
-end
 
 -- manage the altar
 local function manageAltar()
     local wantedItemID
     local neededItemID
     while true do
-        wantedItemID = wantedOutputID(wantedChest)
-        neededItemID = neededID(config.jsonRecipes, wantedItemID)
+        wantedItemID = wantedOutputID()
+        neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
         if neededItemID == nil then -- if no ID found for specified craft
             print("\nNeeded ID for " .. wantedItemID .. " not found.")
             while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
@@ -144,6 +151,7 @@ local function main()
     outputChest = getPeripheral(config.outputChest)
     inputRecipeChest = getPeripheral(config.inputRecipeChest)
     outputRecipeChest = getPeripheral(config.outputRecipeChest)
+    autoCraftChest = getPeripheral(config.autoCraftChest)
 
     -- Begin
     while true do

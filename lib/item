@@ -52,12 +52,18 @@ function getItemIDFromSlot(container, slot)
     return item.id
 end
 
--- Returns position in the container of the 1sr occurence of the specified item
+-- Returns position in the container of the 1sr occurence of an item, or of a specified item
 function getSlotOfItem(container, itemID)
     local n = container.getInventorySize()
     local i = 1
-    while i <= n and (not slotContainsItem(container, i, itemID)) do
-        i = i + 1
+    if itemID == nil then
+        while i <= n and (not slotContainsItem(container, i)) do
+            i = i + 1
+        end
+    else
+        while i <= n and (not slotContainsItem(container, i, itemID)) do
+            i = i + 1
+        end
     end
     if i > n then
         return -1

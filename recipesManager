@@ -10,7 +10,8 @@ function init()
 end
 
 --- FUNCTIONS ---
-local function alreadyPresent(recipes, itemID)
+-- check if recipe match an output item
+local function outputAlreadyPresent(recipes, itemID)
     for output,input in ipairs(recipes) do
         if output == itemID then
             return true
@@ -19,13 +20,24 @@ local function alreadyPresent(recipes, itemID)
     return false
 end
 
---- CALL ---
+-- returns output item corresponding to an input item
+local function getOutputItem(jsonFile, itemID)
+    local recipes = objectJSON.decodeFromFile(jsonFile)
+    for output,input in ipairs(recipes) do
+        if input == itemID then
+            return output
+        end
+    end
+    return nil
+end
+
+-- add or edit an item recipe
 function addItem(jsonFile, inputChest, outputChest)
     local recipes = objectJSON.decodeFromFile(jsonFile)
     local inputItemID = item.getItemIDFromSlot(inputChest, 2)
     local outputItemID = item.getItemIDFromSlot(outputChest, 2)
 
-    if alreadyPresent(recipes, outputItemID) then
+    if outputAlreadyPresent(recipes, outputItemID) then
         print("Item is already present.")
         print("Do you want to change the recipe ? Answer with Y or N")
         local str = io.read()
