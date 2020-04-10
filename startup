@@ -10,10 +10,6 @@ local outputRecipeChest -- table : container contaning output item for new recip
 
 --- INIT ---
 local function init()
-    local mon = peripheral.find("monitor")
-    if mon ~= nil then
-        term.redirect(mon)
-    end
     print("\n--- INIT startup ---")
     if not fs.exists("lib/json") then
         shell.run("pastebin get 4nRg9CHU lib/json")
@@ -27,6 +23,13 @@ local function loadAPI(apis)
         print("API " .. v .. " loaded !")
     end
     print("")
+end
+
+local function logs()
+    local mon = peripheral.wrap(config.monitor)
+    if mon ~= nil then
+        term.redirect(mon)
+    end
 end
 
 --- CONFIG ---
@@ -143,6 +146,7 @@ local function main()
 
     -- Loading config
     config = objectJSON.decodeFromFile("config")
+    logs()
     altar = getPeripheral(config.altar)
     wantedChest = getPeripheral(config.wantedChest)
     inputChest = getPeripheral(config.inputChest)
