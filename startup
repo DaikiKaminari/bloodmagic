@@ -50,16 +50,6 @@ local function hasRedstoneSignal()
 end
 
 --- FUNCTIONS ---
-local function wantedOutputID(container)
-    print("\nSearching for a wanted item ...")
-    while not item.slotContainsItem(container, 1) do
-        sleep(1)
-    end
-    local slotInfo = container.getStackInSlot(1)
-    print("Item found ! It is : " .. slotInfo.display_name)
-    return slotInfo.id
-end
-
 -- manage input and output of a specified item
 local function newItemToProcess(wantedID)
     while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
@@ -80,6 +70,16 @@ local function newItemToProcess(wantedID)
     print("Removed item")
 end
 
+local function wantedOutputID(container)
+    print("\nSearching for a wanted item ...")
+    while not item.slotContainsItem(container, 1) do
+        sleep(1)
+    end
+    local slotInfo = container.getStackInSlot(1)
+    print("Item found ! It is : " .. slotInfo.display_name)
+    return slotInfo.id
+end
+
 -- returns the ID of the item needed in input to get the wantedID in output
 local function neededID(jsonFile, wantedID)
     local recipes = objectJSON.decodeFromFile(jsonFile)
@@ -88,18 +88,18 @@ end
 
 -- manage the altar
 local function manageAltar()
-    local wantedID
-    local neededID
+    local wantedItemID
+    local neededItemID
     while true do
-        wantedID = wantedOutputID(wantedChest)
-        neededID = neededID(config.jsonRecipes, wantedID)
-        if neededID == nil then -- if no ID found for specified craft
-            print("\nNeeded ID for " .. wantedID .. " not found.")
+        wantedItemID = wantedOutputID(wantedChest)
+        neededItemID = neededID(config.jsonRecipes, wantedItemID)
+        if neededItemID == nil then -- if no ID found for specified craft
+            print("\nNeeded ID for " .. wantedItemID .. " not found.")
             while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
                 sleep(1)
             end
         else
-            newItemToProcess(wantedID)
+            newItemToProcess(wantedItemID)
             item.pushItem(altar, "SOUTH") -- send all items from the altar into the output chest
         end
         sleep(1)
