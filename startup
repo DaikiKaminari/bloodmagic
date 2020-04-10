@@ -86,8 +86,13 @@ local function processItem(side, wantedItemID, typeCrafting)
     end
     if typeCrafting == "manual" then
         while item.containsItem(wantedChest) do
+            --- INPUT ---
             if not item.containsItem(altar) then
                 sendItemToAltar(side, neededItemID, 1)
+            end
+            --- OUTPUT ---
+            if item.containsItem(altar, wantedItemID) then
+                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
             end
             sleep(0)
         end
