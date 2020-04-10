@@ -60,7 +60,7 @@ end
 -- manage input and output of a specified item
 local function newItemToProcess(wantedItemID, neededItemID)
     print("\nProcess [" .. neededItemID .."] in [" .. wantedItemID .. "]")
-    while item.slotContainsItem(wantedChest, 1) or item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
+    while item.slotContainsItem(wantedChest, 1) or item.containsItem(inputChest, neededItemID) do -- continue until the item is removed from wanted chest or input chest is empty
         if item.containsItem(altar) then -- if the altar contains items
             if item.slotContainsItem(altar, 1, wantedItemID) then -- altar contains wanted item
                 item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
