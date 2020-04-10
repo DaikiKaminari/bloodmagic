@@ -92,7 +92,7 @@ local function wantedOutputID()
         end
         sleep(1)
     end
-    print("Wanted item is : " .. wantedItemID)
+    print("Wanted item is : [" .. wantedItemID .. "]")
     return wantedItemID
 end
 
@@ -105,7 +105,7 @@ local function manageAltar()
         wantedItemID = wantedOutputID()
         neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
         if neededItemID == nil then -- if no ID found for specified craft
-            print("\nNeeded ID for " .. wantedItemID .. " not found.")
+            print("\nNeeded item for [" .. wantedItemID .. "] not found.")
             while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
                 sleep(1)
             end
