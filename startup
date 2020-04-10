@@ -29,6 +29,7 @@ local function logs()
     local mon = peripheral.wrap(config.monitor)
     if mon ~= nil then
         term.redirect(mon)
+        term.clear()
     end
 end
 
@@ -74,6 +75,7 @@ local function processItem(side, wantedItemID, typeCrafting)
                     sendItemToAltar(side, neededItemID, 1)
                 end
             end
+            sleep(0)
         end
     end
     if typeCrafting == "manual" then
@@ -81,6 +83,7 @@ local function processItem(side, wantedItemID, typeCrafting)
             if not item.containsItem(altar) then
                 sendItemToAltar(side, neededItemID, 1)
             end
+            sleep(0)
         end
     end
 end
