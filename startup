@@ -7,7 +7,6 @@ local inputChest        -- table : container contaning input items (peripheral)
 local outputChest       -- table : container containing output items (periphral)
 local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
 local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
-local autoCraftChest    -- table : container containing input items for an autocraft (peripheral)
 
 --- INIT ---
 local function init()
@@ -85,12 +84,12 @@ local function wantedOutputID()
             print("Manual crafting detected.")
             wantedItemID = wantedChest.getStackInSlot(1).id
         else -- if there is nothing in the wanted chest
-            if item.containsItem(autoCraftChest) then -- if the autocraft chest contains any item
+            if item.containsItem(inputChest) then -- if the input chest contains any item
                 print("Auto crafting detected.")
-                local slot = item.getSlotOfItem(autoCraftChest) -- get the slot of the 1st item
+                local slot = item.getSlotOfItem(inputChest) -- get the slot of the 1st item
                 print("TEST")
                 print(slot)
-                local inputItemID = autoCraftChest.getStackInSlot(slot).id -- get the input item in autocraft chest
+                local inputItemID = inputChest.getStackInSlot(slot).id -- get the input item in input chest
                 print(inputItemID)
                 wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, inputItemID) -- get corresponding output item according to the recipe
                 print(wantedItemID)
@@ -156,7 +155,6 @@ local function main()
     outputChest = getPeripheral(config.outputChest)
     inputRecipeChest = getPeripheral(config.inputRecipeChest)
     outputRecipeChest = getPeripheral(config.outputRecipeChest)
-    autoCraftChest = getPeripheral(config.autoCraftChest)
 
     -- Begin
     while true do

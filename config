@@ -5,6 +5,5 @@
     "altar": "back",
     "jsonRecipes": "recipes",
     "inputRecipeChest": "tile_thermalexpansion_cache_basic_name_0",
-    "outputRecipeChest": "tile_thermalexpansion_cache_basic_name_1",
-    "autoCraftChest": "ender_chest_0"
+    "outputRecipeChest": "tile_thermalexpansion_cache_basic_name_1"
 }
