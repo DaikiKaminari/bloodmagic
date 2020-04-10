@@ -26,6 +26,9 @@ end
 
 -- Push an specified quantity of item from a container to another
 function pushItem(inputContainer, outputSide, quantity)
+    if not containsItem(inputContainer) then
+        return
+    end
     local n = inputContainer.getInventorySize()
     local i = 1
     while (not slotContainsItem(inputContainer, i)) do

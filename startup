@@ -75,6 +75,7 @@ local function newItemToProcess(wantedItemID, neededItemID)
     print("Removed item")
 end
 
+-- returns wanted item ID
 local function wantedOutputID(container)
     print("\nSearching for a wanted item ...")
     while not item.slotContainsItem(container, 1) do
