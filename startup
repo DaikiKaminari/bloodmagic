@@ -1,4 +1,4 @@
--- [V0.3]
+local version = 0.31
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -31,6 +31,7 @@ local function logs()
         term.redirect(mon)
         term.clear()
     end
+    print(version)
 end
 
 --- CONFIG ---
@@ -67,10 +68,7 @@ local function processItem(side, wantedItemID, typeCrafting)
     if typeCrafting == "auto" then
         print("Begin process of [" .. neededItemID .. "] to get [" .. wantedItemID .. "]")
         while item.containsItem(inputChest, neededItemID) do
-            if item.containsItem(altar, wantedItemID) then
-                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-            end
-
+            --- INPUT ---
             if neededItemID == nil then
                 print("\nNeeded item for [" .. wantedItemID .. "] not found.")
                 break
@@ -78,6 +76,10 @@ local function processItem(side, wantedItemID, typeCrafting)
                 if not item.containsItem(altar) then
                     sendItemToAltar(side, neededItemID, 1)
                 end
+            end
+            --- OUTPUT ---
+            if item.containsItem(altar, wantedItemID) then
+                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
             end
             sleep(0)
         end
