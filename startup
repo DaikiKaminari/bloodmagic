@@ -183,7 +183,7 @@ local function main()
     inputChest = getPeripheral(config.inputChest)
     inputRecipeChest = getPeripheral(config.inputRecipeChest)
     outputRecipeChest = getPeripheral(config.outputRecipeChest)
-    redstoneSide = getPeripheral(config.redstoneSide)
+    redstoneSide = config.redstoneSide
 
     -- Begin
     while true do
