@@ -42,7 +42,6 @@ local function getPeripheral(side)
 end
 
 --- UTILS ---
-
 local function hasRedstoneSignal()
     for _,v in pairs(redstone.getSides()) do
         if redstone.getInput(v) then
@@ -52,22 +51,15 @@ local function hasRedstoneSignal()
     return false
 end
 
-local function pushItemToAltar(inputChest, side, neededItemID, quantity)
+-- send an item to the altar, neededItemID may be specified
+local function sendItemToAltar(side, neededItemID, quantity)
     local slot = item.getSlotOfItem(inputChest, neededItemID)
-    if slot ~= -1 then -- needed item slot in the input chest
-        inputChest.pushItem("NORTH", slot, quantity) -- send 1 item from the input chest into the altar
+    if slot ~= -1 then -- if the item is present in the input chest
+        inputChest.pushItem(side, slot, quantity) -- push 1 needed item from input chest to the altar
     end
 end
 
 --- FUNCTIONS ---
--- send an item to the altar, neededItemID may be specified
-local function sendItemToAltar(side, neededItemID)
-    local slot = item.getSlotOfItem(inputChest, neededItemID)
-    if slot ~= -1 then -- if the item is present in the input chest
-        inputChest.pushItem(side, slot, 1) -- push 1 needed item from input chest to the altar
-    end
-end
-
 -- process a new item
 local function processItem(side, wantedItemID, typeCrafting)
     local neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
@@ -78,13 +70,13 @@ local function processItem(side, wantedItemID, typeCrafting)
                 print("\nNeeded item for [" .. wantedItemID .. "] not found.")
                 break
             else
-                sendItemToAltar(side, neededItemID)
+                sendItemToAltar(side, neededItemID, 1)
             end
         end
     end
     if typeCrafting == "manual" then
         while item.containsItem(wantedChest) do
-            sendItemToAltar(side, neededItemID)
+            sendItemToAltar(side, neededItemID, 1)
         end
     end
 end
