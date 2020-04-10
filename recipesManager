@@ -29,8 +29,12 @@ end
 -- returns output item corresponding to an input item
 function getOutputItem(jsonFile, itemID)
     local recipes = objectJSON.decodeFromFile(jsonFile)
-    for output,input in ipairs(recipes) do
+    for output,input in pairs(recipes) do
         if input == itemID then
+            print("TEST")
+            print(input)
+            print(output)
+            print("TEST END")
             return output
         end
     end
