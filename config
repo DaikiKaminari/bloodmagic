@@ -1,6 +1,5 @@
 {
     "inputChest": "ender_chest_0",
-    "outputChest": "ender_chest_1",
     "wantedChest": "top",
     "altar": "back",
     "jsonRecipes": "recipes",

@@ -1,10 +1,9 @@
-local version = 0.41
+local version = 0.42
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
 local wantedChest       -- table : container containing the "wanted output item" (peripheral)
 local inputChest        -- table : container contaning input items (peripheral)
-local outputChest       -- table : container containing output items (periphral)
 local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
 local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
 
@@ -106,7 +105,7 @@ local function manageAltar()
     print("\nSearching for a wanted item ...")
     while true do
         if item.containsItem(wantedChest) then -- manual crafting
-            print("Manual crafting detected.")
+            print("\nManual crafting detected.")
             wantedItemID = item.getItemIDFromSlot(wantedChest, 1)
             print("Wanted item is : [" .. wantedItemID .. "]")
             processItem("NORTH", wantedItemID, "manual")
@@ -114,7 +113,7 @@ local function manageAltar()
             item.pushItem(altar, "SOUTH") -- send all items from the altar into the input chest
         else
             if item.containsItem(inputChest) then -- auto crafting
-                print("Auto crafting detected.")
+                print("\nAuto crafting detected.")
                 local slot = item.getSlotOfItem(inputChest)
                 neededItemID = item.getItemIDFromSlot(inputChest, slot)
                 wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, neededItemID)
@@ -161,7 +160,6 @@ local function main()
     altar = getPeripheral(config.altar)
     wantedChest = getPeripheral(config.wantedChest)
     inputChest = getPeripheral(config.inputChest)
-    outputChest = getPeripheral(config.outputChest)
     inputRecipeChest = getPeripheral(config.inputRecipeChest)
     outputRecipeChest = getPeripheral(config.outputRecipeChest)
 
