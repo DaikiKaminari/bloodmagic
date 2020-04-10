@@ -67,6 +67,10 @@ local function processItem(side, wantedItemID, typeCrafting)
     if typeCrafting == "auto" then
         print("Begin process of [" .. neededItemID .. "] to get [" .. wantedItemID .. "]")
         while item.containsItem(inputChest, neededItemID) do
+            if item.containsItem(altar, wantedItemID) then
+                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
+            end
+
             if neededItemID == nil then
                 print("\nNeeded item for [" .. wantedItemID .. "] not found.")
                 break
@@ -100,7 +104,7 @@ local function manageAltar()
             print("Wanted item is : [" .. wantedItemID .. "]")
             processItem("NORTH", wantedItemID, "manual")
             print("\nSearching for a wanted item ...")
-            item.pushItem(altar, "SOUTH") -- send all items from the altar into the output chest
+            item.pushItem(altar, "SOUTH") -- send all items from the altar into the input chest
         else
             if item.containsItem(inputChest) then -- auto crafting
                 print("Auto crafting detected.")
