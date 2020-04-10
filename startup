@@ -49,20 +49,25 @@ local function hasRedstoneSignal()
     return false
 end
 
+local function pushItemToAltar(inputChest, side, neededItemID)
+    local slot = item.getSlotIDOfItem(inputChest, neededItemID)
+    if slot ~= -1 then -- needed item slot in the input chest
+        inputChest.pushItem("NORTH", slot, 1) -- send 1 item from the input chest into the altar
+    end
+end
+
 --- FUNCTIONS ---
 -- manage input and output of a specified item
-local function newItemToProcess(wantedID)
+local function newItemToProcess(wantedItemID, neededItemID)
     while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
         if item.containsItem(altar) then -- if the altar contains items
-            if item.slotContainsItem(altar, 1, wantedID) then -- altar contains wanted item
+            if item.slotContainsItem(altar, 1, wantedItemID) then -- altar contains wanted item
                 item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-                if item.containsItem(inputChest) then -- if the input chest contains items
-                    item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
-                end
+                pushItemToAltar(inputChest, "NORTH", neededItemID) -- if there is needed intem in input chest then send 1 to altar
             end
         else -- if the altar is empty
             if item.containsItem(inputChest) then -- if the input chest contains items
-                item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest to the altar
+                item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest into altar
             end
         end
         sleep(1)
@@ -99,7 +104,7 @@ local function manageAltar()
                 sleep(1)
             end
         else
-            newItemToProcess(wantedItemID)
+            newItemToProcess(wantedItemID, neededItemID)
             item.pushItem(altar, "SOUTH") -- send all items from the altar into the output chest
         end
         sleep(1)
