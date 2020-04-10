@@ -57,65 +57,61 @@ local function pushItemToAltar(inputChest, side, neededItemID, quantity)
 end
 
 --- FUNCTIONS ---
--- manage input and output of a specified item
-local function newItemToProcess(wantedItemID, neededItemID)
-    print("\nProcess [" .. neededItemID .."] in [" .. wantedItemID .. "]")
-    while item.slotContainsItem(wantedChest, 1) or item.containsItem(inputChest, neededItemID) do -- continue until the item is removed from wanted chest or input chest is empty
-        if item.containsItem(altar) then -- if the altar contains items
-            if item.slotContainsItem(altar, 1, wantedItemID) then -- altar contains wanted item
-                item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-                pushItemToAltar(inputChest, "NORTH", neededItemID, 1) -- if there is needed intem in input chest then send 1 to altar
-            end
-        else -- if the altar is empty
-            if item.containsItem(inputChest) then -- if the input chest contains items
-                pushItemToAltar(inputChest, "NORTH", neededItemID, 1) -- if there is needed intem in input chest then send 1 to altar
-            end
-        end
-        sleep(1)
+-- send an item to the altar, neededItemID may be specified
+local function sendItemToAltar(side, neededItemID)
+    local slot = item.getSlotOfItem(inputChest, neededItemID)
+    if slot ~= -1 then -- if the item is present in the input chest
+        inputChest.pushItem(side, slot, 1) -- push 1 needed item from input chest to the altar
     end
-    print("Removed item")
 end
 
--- returns wanted item ID
-local function wantedOutputID()
-    print("\nSearching for a wanted item ...")
-    while wantedItemID == nil do
-        if item.slotContainsItem(wantedChest, 1) then -- if there is something in the wanted chest
-            print("Manual crafting detected.")
-            wantedItemID = wantedChest.getStackInSlot(1).id
-        else -- if there is nothing in the wanted chest
-            if item.containsItem(inputChest) then -- if the input chest contains any item
-                print("Auto crafting detected.")
-                local slot = item.getSlotOfItem(inputChest) -- get the slot of the 1st item
-                local inputItemID = inputChest.getStackInSlot(slot).id -- get the input item in input chest
-                wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, inputItemID) -- get corresponding output item according to the recipe
-                if wantedItemID == nil then
-                    print("No wanted item found for [" .. inputItemID .. "]")
-                end
-            end
+-- process a new item
+local function processItem(side, wantedItemID, typeCrafting)
+    local neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
+    if typeCrafting == "auto" then
+        print("Begin process of [" .. neededItemID .. "] to get [" .. wantedItemID .. "]")
+        while item.containsItem(inputChest, neededItemID) do
+            if neededItemID == nil then
+                print("\nNeeded item for [" .. wantedItemID .. "] not found.")
+                break
+            else
+            sendItemToAltar(side, neededItemID)
         end
-        sleep(1)
     end
-    print("Wanted item is : [" .. wantedItemID .. "]")
-    return wantedItemID
+    if typeCrafting == "manual" then
+        while item.containsItem(wantedChest) do
+            sendItemToAltar(side, neededItemID)
+        end
+    end
 end
-
 
 -- manage the altar
 local function manageAltar()
     local wantedItemID
     local neededItemID
+    print("\nSearching for a wanted item ...")
     while true do
-        wantedItemID = wantedOutputID()
-        neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
-        if neededItemID == nil then -- if no ID found for specified craft
-            print("\nNeeded item for [" .. wantedItemID .. "] not found.")
-            while item.slotContainsItem(wantedChest, 1) do -- wait until item is removed from wantedChest
-                sleep(1)
-            end
-        else
-            newItemToProcess(wantedItemID, neededItemID)
+        if item.containsItem(wantedChest) then -- manual crafting
+            print("Manual crafting detected.")
+            wantedItemID = item.getItemIDFromSlot(wantedChest, 1)
+            print("Wanted item is : [" .. wantedItemID .. "]")
+            processItem("NORTH", wantedItemID, "manual")
+            print("\nSearching for a wanted item ...")
             item.pushItem(altar, "SOUTH") -- send all items from the altar into the output chest
+        else
+            if item.containsItem(inputChest) then -- auto crafting
+                print("Auto crafting detected.")
+                local slot = item.getSlotOfItem(inputChest)
+                neededItemID = item.getItemIDFromSlot(inputChest, slot)
+                wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, neededItemID)
+                if wantedItemID == nil then
+                    print("No wanted item found for [" .. inputItemID .. "]")
+                else
+                    print("Wanted item is : [" .. wantedItemID .. "]")
+                    processItem("NORTH", wantedItemID, "auto")
+                    print("\nSearching for a wanted item ...")
+                end
+            end
         end
         sleep(1)
     end
