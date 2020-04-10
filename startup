@@ -88,8 +88,13 @@ local function wantedOutputID()
             if item.containsItem(autoCraftChest) then -- if the autocraft chest contains any item
                 print("Auto crafting detected.")
                 local slot = item.getSlotOfItem(autoCraftChest) -- get the slot of the 1st item
+                print("TEST")
+                print(slot)
                 local inputItemID = autoCraftChest.getStackInSlot(slot).id -- get the input item in autocraft chest
+                print(inputItemID)
                 wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, inputItemID) -- get corresponding output item according to the recipe
+                print(wantedItemID)
+                print("TEST END")
             end
         end
         sleep(1)
