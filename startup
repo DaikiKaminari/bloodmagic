@@ -1,4 +1,4 @@
-local version = 0.51
+local version = 0.52
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -62,11 +62,15 @@ local function sendItemToAltar(side, neededItemID, quantity)
 end
 
 -- turn on or off altar
-local function switchAltar(state)
-    if state == "on" then
-        redstone.setOutput(redstoneSide, false)
-    elseif state == "off" then
-        redstone.setOutput(redstoneSide, true)
+local function switchAltar(currentState, state)
+    if currentState ~= state then
+        if state == "on" then
+            print("\nStarting blood production.")
+            redstone.setOutput(redstoneSide, false)
+        elseif state == "off" then
+            print("\nStopping blood production.")
+            redstone.setOutput(redstoneSide, true)
+        end
     end
 end
 
@@ -113,7 +117,8 @@ local function manageAltar()
     local wantedItemID
     local neededItemID
     local altarEmpty = 0
-    switchAltar("off")
+    local currentState
+    switchAltar(currentState, "off")
     print("\nSearching for a wanted item ...")
     while true do
         if item.containsItem(wantedChest) then -- manual crafting
@@ -140,14 +145,14 @@ local function manageAltar()
         end
         if item.containsItem(altar) then -- turn on the altar if it contains items
             altarEmpty = 0
-            print("\nStarting blood production.")
-            switchAltar("on")
+            switchAltar(currentState, "on")
+            currentState = "on"
         else
             altarEmpty = altarEmpty + 1
         end
-        if altarEmpty >= 30 then -- turn off the altar if it does not contain items for more than 30secs
-            print("\nStopping blood production.")
-            switchAltar("off")
+        if altarEmpty == 30 then -- turn off the altar if it does not contain items for more than 30secs
+            switchAltar(currentState, "off")
+            currentState = "off"
         end
         sleep(1)
     end
