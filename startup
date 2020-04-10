@@ -1,4 +1,4 @@
--- [V0.2]
+-- [V0.3]
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -49,10 +49,10 @@ local function hasRedstoneSignal()
     return false
 end
 
-local function pushItemToAltar(inputChest, side, neededItemID)
-    local slot = item.getSlotIDOfItem(inputChest, neededItemID)
+local function pushItemToAltar(inputChest, side, neededItemID, quantity)
+    local slot = item.getSlotOfItem(inputChest, neededItemID)
     if slot ~= -1 then -- needed item slot in the input chest
-        inputChest.pushItem("NORTH", slot, 1) -- send 1 item from the input chest into the altar
+        inputChest.pushItem("NORTH", slot, quantity) -- send 1 item from the input chest into the altar
     end
 end
 
@@ -63,11 +63,11 @@ local function newItemToProcess(wantedItemID, neededItemID)
         if item.containsItem(altar) then -- if the altar contains items
             if item.slotContainsItem(altar, 1, wantedItemID) then -- altar contains wanted item
                 item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
-                pushItemToAltar(inputChest, "NORTH", neededItemID) -- if there is needed intem in input chest then send 1 to altar
+                pushItemToAltar(inputChest, "NORTH", neededItemID, 1) -- if there is needed intem in input chest then send 1 to altar
             end
         else -- if the altar is empty
             if item.containsItem(inputChest) then -- if the input chest contains items
-                item.pushItem(inputChest, "NORTH", 1) -- send 2 items from the input chest into altar
+                pushItemToAltar(inputChest, "NORTH", neededItemID, 1) -- if there is needed intem in input chest then send 1 to altar
             end
         end
         sleep(1)
