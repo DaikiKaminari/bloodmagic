@@ -78,7 +78,8 @@ local function processItem(side, wantedItemID, typeCrafting)
                 print("\nNeeded item for [" .. wantedItemID .. "] not found.")
                 break
             else
-            sendItemToAltar(side, neededItemID)
+                sendItemToAltar(side, neededItemID)
+            end
         end
     end
     if typeCrafting == "manual" then
