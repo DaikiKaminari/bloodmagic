@@ -1,4 +1,4 @@
-local version = 0.31
+local version = 0.32
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -82,6 +82,10 @@ local function processItem(side, wantedItemID, typeCrafting)
                 item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
             end
             sleep(0)
+        end
+        --- OUTPUT ---
+        if item.containsItem(altar, wantedItemID) then
+            item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
         end
     end
     if typeCrafting == "manual" then
