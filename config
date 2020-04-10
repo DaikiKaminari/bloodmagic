@@ -5,5 +5,6 @@
     "jsonRecipes": "recipes",
     "inputRecipeChest": "tile_thermalexpansion_cache_basic_name_0",
     "outputRecipeChest": "tile_thermalexpansion_cache_basic_name_1",
-    "monitor": "monitor_21"
+    "monitor": "monitor_21",
+    "redstoneSide": "left"
 }

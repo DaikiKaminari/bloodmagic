@@ -1,4 +1,4 @@
-local version = 0.42
+local version = 0.5
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -6,6 +6,7 @@ local wantedChest       -- table : container containing the "wanted output item"
 local inputChest        -- table : container contaning input items (peripheral)
 local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
 local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
+local redstoneSide      -- string : where redstone will be output
 
 --- INIT ---
 local function init()
@@ -60,6 +61,15 @@ local function sendItemToAltar(side, neededItemID, quantity)
     end
 end
 
+-- turn on or off altar
+local function switchAltar(state)
+    if state == "on" then
+        redstone.setOutput(redstoneSide, false)
+    elseif state == "off" then
+        redstone.setOutput(redstoneSide, true)
+    end
+end
+
 --- FUNCTIONS ---
 -- process a new item
 local function processItem(side, wantedItemID, typeCrafting)
@@ -102,6 +112,8 @@ end
 local function manageAltar()
     local wantedItemID
     local neededItemID
+    local altarEmpty = 0
+    switchAltar("off")
     print("\nSearching for a wanted item ...")
     while true do
         if item.containsItem(wantedChest) then -- manual crafting
@@ -125,6 +137,15 @@ local function manageAltar()
                     print("\nSearching for a wanted item ...")
                 end
             end
+        end
+        if item.containsItem(altar) then -- turn on the altar if it contains items
+            altarEmpty = 0
+            switchAltar("on")
+        else
+            altarEmpty = altarEmpty + 1
+        end
+        if altarEmpty >= 30 then -- turn off the altar if it does not contain items for more than 30secs
+            switchAltar("off")
         end
         sleep(1)
     end
@@ -162,6 +183,7 @@ local function main()
     inputChest = getPeripheral(config.inputChest)
     inputRecipeChest = getPeripheral(config.inputRecipeChest)
     outputRecipeChest = getPeripheral(config.outputRecipeChest)
+    redstoneSide = getPeripheral(config.redstoneSide)
 
     -- Begin
     while true do
