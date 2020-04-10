@@ -70,13 +70,17 @@ local function processItem(side, wantedItemID, typeCrafting)
                 print("\nNeeded item for [" .. wantedItemID .. "] not found.")
                 break
             else
-                sendItemToAltar(side, neededItemID, 1)
+                if not item.containsItem(altar) then
+                    sendItemToAltar(side, neededItemID, 1)
+                end
             end
         end
     end
     if typeCrafting == "manual" then
         while item.containsItem(wantedChest) do
-            sendItemToAltar(side, neededItemID, 1)
+            if not item.containsItem(altar) then
+                sendItemToAltar(side, neededItemID, 1)
+            end
         end
     end
 end
@@ -101,7 +105,7 @@ local function manageAltar()
                 neededItemID = item.getItemIDFromSlot(inputChest, slot)
                 wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, neededItemID)
                 if wantedItemID == nil then
-                    print("No wanted item found for [" .. inputItemID .. "]")
+                    print("No wanted item found for [" .. neededItemID .. "]")
                 else
                     print("Wanted item is : [" .. wantedItemID .. "]")
                     processItem("NORTH", wantedItemID, "auto")
