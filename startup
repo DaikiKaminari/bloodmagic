@@ -59,7 +59,7 @@ end
 --- FUNCTIONS ---
 -- manage input and output of a specified item
 local function newItemToProcess(wantedItemID, neededItemID)
-    while item.slotContainsItem(wantedChest, 1) or not item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
+    while item.slotContainsItem(wantedChest, 1) or item.containsItem(inputChest) do -- continue until the item is removed from wanted chest or input chest is empty
         if item.containsItem(altar) then -- if the altar contains items
             if item.slotContainsItem(altar, 1, wantedItemID) then -- altar contains wanted item
                 item.pushItem(altar, "NORTH") -- send all items from the altar into the output chest
@@ -82,20 +82,18 @@ local function wantedOutputID()
         if item.slotContainsItem(wantedChest, 1) then -- if there is something in the wanted chest
             print("Manual crafting detected.")
             wantedItemID = wantedChest.getStackInSlot(1).id
-            print("Item found ! It is : " .. wantedItemID)
-                return wantedItemID
         else -- if there is nothing in the wanted chest
             if item.containsItem(inputChest) then -- if the input chest contains any item
                 print("Auto crafting detected.")
                 local slot = item.getSlotOfItem(inputChest) -- get the slot of the 1st item
                 local inputItemID = inputChest.getStackInSlot(slot).id -- get the input item in input chest
                 wantedItemID = recipesManager.getOutputItem(config.jsonRecipes, inputItemID) -- get corresponding output item according to the recipe
-                print("Item found ! It is : " .. wantedItemID)
-                return wantedItemID
             end
         end
         sleep(1)
     end
+    print("Wanted item is : " .. wantedItemID)
+    return wantedItemID
 end
 
 
