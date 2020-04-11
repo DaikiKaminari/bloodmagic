@@ -1,4 +1,4 @@
-local version = 0.52
+local version = 1.0
 --- GLOBAL VARIABLES ---
 local config            -- table : configuration
 local altar             -- table : altar (peripheral)
@@ -7,6 +7,7 @@ local inputChest        -- table : container contaning input items (peripheral)
 local inputRecipeChest  -- table : container contaning input item for new recipe (peripheral)
 local outputRecipeChest -- table : container contaning output item for new recipe (peripheral)
 local redstoneSide      -- string : where redstone will be output
+local currentState      -- boolean : state of blood production of the altar
 
 --- INIT ---
 local function init()
@@ -31,7 +32,7 @@ local function logs()
         term.redirect(mon)
         term.clear()
     end
-    print(version)
+    print("Version : " .. tostring(version))
 end
 
 --- CONFIG ---
@@ -79,6 +80,7 @@ end
 local function processItem(side, wantedItemID, typeCrafting)
     local neededItemID = recipesManager.getInputItem(config.jsonRecipes, wantedItemID)
     if typeCrafting == "auto" then
+        switchAltar(currentState, "on")
         print("Begin process of [" .. neededItemID .. "] to get [" .. wantedItemID .. "]")
         while item.containsItem(inputChest, neededItemID) or item.containsItem(altar) do
             --- INPUT ---
@@ -98,6 +100,7 @@ local function processItem(side, wantedItemID, typeCrafting)
         end
     end
     if typeCrafting == "manual" then
+        switchAltar(currentState, "on")
         while item.containsItem(wantedChest) do
             --- INPUT ---
             if not item.containsItem(altar) then
@@ -117,7 +120,6 @@ local function manageAltar()
     local wantedItemID
     local neededItemID
     local altarEmpty = 0
-    local currentState
     switchAltar(currentState, "off")
     print("\nSearching for a wanted item ...")
     while true do
